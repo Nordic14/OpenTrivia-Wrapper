@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace OpenTrivia_Wrapper
 {
+    /// <summary>
+    /// Allows you to access the API. DO NOT CREATE MULTIPLE INSTANCES OF THIS CLASS!
+    /// </summary>
     public class OpenTriviaClient
     {
         #region enums
@@ -84,7 +87,7 @@ namespace OpenTrivia_Wrapper
         public QuestionType Type { get; set; }
 
         /// <summary>
-        /// 
+        /// Tells the API how many questions should be retrieved per call.
         /// </summary>
         public int Amount { get; set; }
         #endregion  
@@ -104,7 +107,10 @@ namespace OpenTrivia_Wrapper
             Client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
         }
         
-        
+        /// <summary>
+        /// Retrieves questions based on the settings.
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<Question>> RetrieveQuestions()
         {
             string category = this.Category != Categories.Any_Category ? $"&category={(int)this.Category}" : "";
@@ -117,7 +123,7 @@ namespace OpenTrivia_Wrapper
             {
                 questions = await msg.Content.ReadAsAsync<QuestionResults>();
 
-                if (questions.ResponseCode != 0) {
+                if (questions.ResponseCode != 0) { //If, for some reason, the API returns no results.
                     throw new ResultsNotFoundException("Couldn't find any results that satisfy your query.");
                 }
             }
