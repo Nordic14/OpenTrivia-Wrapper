@@ -339,5 +339,5 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 
-#Ignores the TestWrapper project.
+#Ignore the project TestWrapper
 TestWrapper/
