@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -45,7 +45,7 @@ namespace OpenTrivia_Wrapper
             Vehicles,
             Entertainment_Comics,
             Science_Gadgets,
-            Entertainment_Anime_Manga,
+            Entertainment_Japanese_Anime_Manga,
             Entertainment_Cartoons,
         }
 
@@ -116,7 +116,7 @@ namespace OpenTrivia_Wrapper
             string category = this.Category != Categories.Any_Category ? $"&category={(int)this.Category}" : "";
             string difficulty = this.Difficulty != Difficulties.Any_Difficulty ? $"&difficulty={this.Difficulty.ToString().ToLower()}": "";
 
-            string url = $"{BASE_URL}?amount={(this.Amount > 0 ? this.Amount : 1)}{category}{difficulty}";
+            string url = $"{BASE_URL}?amount={(this.Amount > 0 ? this.Amount : 1)}{category}{difficulty}{(Token != null ? $"&token={Token}" : "")}";
 
             QuestionResults questions = null;
             using (HttpResponseMessage msg = await Client.GetAsync(url))
@@ -129,6 +129,28 @@ namespace OpenTrivia_Wrapper
             }
 
             return questions.Questions;
+        }
+
+        /// <summary>
+        /// Use this method to set the token property of an OpenTrivia object.
+        /// If a token is specified, the app won't return the same question twice.
+        /// </summary>
+        /// <returns></returns>
+        public async void RetrieveToken()
+        {
+            string token;
+
+            using (HttpResponseMessage msg = await Client.GetAsync("https://opentdb.com/api_token.php?command=request"))
+            {
+                if (msg.IsSuccessStatusCode)
+                {
+                    JObject obj = JsonConvert.DeserializeObject<JObject>(await msg.Content.ReadAsStringAsync());
+                    token = (string)obj["token"];
+
+                    this.Token = token;
+
+                }
+            }
         }
         
     }
