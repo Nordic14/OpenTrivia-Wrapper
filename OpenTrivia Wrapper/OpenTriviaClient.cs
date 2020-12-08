@@ -58,7 +58,7 @@ namespace OpenTrivia_Wrapper
         #endregion
 
         #region fields
-        private static HttpClient Client;
+        private static readonly HttpClient Client;
 
         /// <summary>
         /// The API base URL.
@@ -82,7 +82,7 @@ namespace OpenTrivia_Wrapper
         public Categories Category { get; set; }
 
         /// <summary>
-        /// If specified, the API returns ques
+        /// If specified, the API returns a question whose type (either true or false or multiple choice) matches tje selected type.
         /// </summary>
         public QuestionType Type { get; set; }
 
@@ -115,8 +115,15 @@ namespace OpenTrivia_Wrapper
         {
             string category = this.Category != Categories.Any_Category ? $"&category={(int)this.Category}" : "";
             string difficulty = this.Difficulty != Difficulties.Any_Difficulty ? $"&difficulty={this.Difficulty.ToString().ToLower()}": "";
+            string type = "";
 
-            string url = $"{BASE_URL}?amount={(this.Amount > 0 ? this.Amount : 1)}{category}{difficulty}{(Token != null ? $"&token={Token}" : "")}";
+            switch (this.Type)
+            {
+                case QuestionType.MultipleChoice: type = "&type=multiple"; break;
+                case QuestionType.Any_Type: type = "&type=boolean"; break;
+            }
+
+            string url = $"{BASE_URL}?amount={(this.Amount > 0 ? this.Amount : 1)}{category}{difficulty}{type}{(Token != null ? $"&token={Token}" : "")}";
 
             QuestionResults questions = null;
             using (HttpResponseMessage msg = await Client.GetAsync(url))
