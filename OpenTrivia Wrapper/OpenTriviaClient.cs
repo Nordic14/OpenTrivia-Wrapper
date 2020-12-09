@@ -143,7 +143,7 @@ namespace OpenTrivia_Wrapper
         /// If a token is specified, the app won't return the same question twice.
         /// </summary>
         /// <returns></returns>
-        public async void RetrieveToken()
+        public async void UpdateToken()
         {
             string token;
 
