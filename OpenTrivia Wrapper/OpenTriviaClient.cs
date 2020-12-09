@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace OpenTrivia_Wrapper
 {
     /// <summary>
-    /// Allows you to access the API. DO NOT CREATE MULTIPLE INSTANCES OF THIS CLASS!
+    /// Allows you to access the API. Although not recommended, you may create several instances of this class.
     /// </summary>
     public class OpenTriviaClient
     {
