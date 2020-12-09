@@ -12,7 +12,7 @@ OpenTriviaClient client = new OpenTriviaClient
 //If you don't want repeated questions, make sure to use a token, by calling the RetrieveToken method.
 client.RetrieveToken();
 ```
-**Note:** If you want to filter a question per topic, difficulty or type (either true or false or multiple choice), make sure to specify them.
+**Note:** If you want to filter a question per topic, difficulty or type (either true or false or multiple choice), make sure to specify them in the client definition.
 
 # Examples:
 **Retrieving 5 random multiple choice questions about computers:**
