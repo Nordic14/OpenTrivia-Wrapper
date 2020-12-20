@@ -9,8 +9,8 @@ OpenTriviaClient client = new OpenTriviaClient
     Amount = 10, //Default is 1, maximum is 50 (inclusive)
 };
 
-//If you don't want repeated questions, make sure to use a token, by calling the RetrieveToken method.
-client.RetrieveToken();
+//If you don't want repeated questions, make sure to use a token, by calling the UpdateToken method.
+client.UpdateToken();
 ```
 **Note:** If you want to filter a question per topic, difficulty or type (either true or false or multiple choice), make sure to specify them in the client definition.
 
