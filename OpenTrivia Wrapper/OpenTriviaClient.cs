@@ -11,52 +11,6 @@ namespace OpenTrivia_Wrapper
     /// </summary>
     public class OpenTriviaClient
     {
-        #region enums
-        public enum Difficulties
-        {
-            Any_Difficulty,
-            Easy,
-            Medium,
-            Hard,
-        }
-
-        public enum Categories
-        {
-            Any_Category,
-            General_Knowledge = 9,
-            Entertainment_Books,
-            Entertainment_Film,
-            Entertainment_Music,
-            Entertainment_Musicals_Theatres,
-            Entertainment_Television,
-            Entertainment_Video_Games,
-            Entertainment_Board_Games,
-            Science_Nature,
-            Science_Computers,
-            Science_Mathematics,
-            Mythology,
-            Sports,
-            Geography,
-            History,
-            Politics,
-            Art,
-            Celebrities,
-            Animals,
-            Vehicles,
-            Entertainment_Comics,
-            Science_Gadgets,
-            Entertainment_Japanese_Anime_Manga,
-            Entertainment_Cartoons,
-        }
-
-        public enum QuestionType
-        {
-            Any_Type,
-            TrueOrFalse,
-            MultipleChoice
-        }
-        #endregion
-
         #region fields
         private static readonly HttpClient Client;
 
@@ -70,26 +24,6 @@ namespace OpenTrivia_Wrapper
         /// Will be deleted after 6 hours of inactivity.
         /// </summary>
         public string Token { get; set; }
-
-        /// <summary>
-        /// If specified, the API returns questions whose difficulty match the selected difficulty.
-        /// </summary>
-        public Difficulties Difficulty { get; set; }
-
-        /// <summary>
-        /// If specified, the API returns a queston based on the selected topic.
-        /// </summary>
-        public Categories Category { get; set; }
-
-        /// <summary>
-        /// If specified, the API returns a question whose type (either true or false or multiple choice) matches tje selected type.
-        /// </summary>
-        public QuestionType Type { get; set; }
-
-        /// <summary>
-        /// Tells the API how many questions should be retrieved per call.
-        /// </summary>
-        public int Amount { get; set; }
         #endregion  
 
 
@@ -110,20 +44,14 @@ namespace OpenTrivia_Wrapper
         /// <summary>
         /// Retrieves questions based on the settings.
         /// </summary>
-        /// <returns></returns>
-        public async Task<List<Question>> RetrieveQuestions()
+        /// <returns>A list of questions</returns>
+        public async Task<List<Question>> RetrieveQuestions(int amount = 1, int category = Category.ANY, string difficulty = Difficulty.ANY, string questionType = QuestionType.ANY)
         {
-            string category = this.Category != Categories.Any_Category ? $"&category={(int)this.Category}" : "";
-            string difficulty = this.Difficulty != Difficulties.Any_Difficulty ? $"&difficulty={this.Difficulty.ToString().ToLower()}": "";
-            string type = "";
+            string categoryString = category != Category.ANY ? $"&category={category}" : "";
+            string difficultyString = difficulty != Difficulty.ANY ? $"&difficulty={difficulty}": "";
+            string typeString = questionType != QuestionType.ANY ? $"type={questionType}" : "";
 
-            switch (this.Type)
-            {
-                case QuestionType.MultipleChoice: type = "&type=multiple"; break;
-                case QuestionType.Any_Type: type = "&type=boolean"; break;
-            }
-
-            string url = $"{BASE_URL}?amount={(this.Amount > 0 ? this.Amount : 1)}{category}{difficulty}{type}{(Token != null ? $"&token={Token}" : "")}";
+            string url = $"{BASE_URL}?amount={(amount > 0 ? amount : 1)}{categoryString}{difficultyString}{typeString}{(Token != null ? $"&token={Token}" : "")}";
 
             QuestionResults questions = null;
             using (HttpResponseMessage msg = await Client.GetAsync(url))
@@ -139,10 +67,10 @@ namespace OpenTrivia_Wrapper
         }
 
         /// <summary>
-        /// Use this method to set the token property of an OpenTrivia object.
+        /// Call this function to set the client token property.
         /// If a token is specified, the app won't return the same question twice.
         /// </summary>
-        /// <returns></returns>
+        ///
         public async void UpdateToken()
         {
             string token;
