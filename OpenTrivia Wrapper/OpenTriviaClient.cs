@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace OpenTrivia_Wrapper
+namespace OpenTriviaSharp
 {
     /// <summary>
     /// Allows you to access the API. Although not recommended, you may create several instances of this class.
@@ -49,7 +50,7 @@ namespace OpenTrivia_Wrapper
         {
             string categoryString = category != Category.ANY ? $"&category={category}" : "";
             string difficultyString = difficulty != Difficulty.ANY ? $"&difficulty={difficulty}": "";
-            string typeString = questionType != QuestionType.ANY ? $"type={questionType}" : "";
+            string typeString = questionType != QuestionType.ANY ? $"&type={questionType}" : "";
 
             string url = $"{BASE_URL}?amount={(amount > 0 ? amount : 1)}{categoryString}{difficultyString}{typeString}{(Token != null ? $"&token={Token}" : "")}";
 
@@ -57,13 +58,20 @@ namespace OpenTrivia_Wrapper
             using (HttpResponseMessage msg = await Client.GetAsync(url))
             {
                 questions = await msg.Content.ReadAsAsync<QuestionResults>();
-
-                if (questions.ResponseCode != 0) { //If, for some reason, the API returns no results.
-                    throw new ResultsNotFoundException("Couldn't find any results that satisfy your query.");
-                }
             }
 
-            return questions.Questions;
+            switch (questions.ResponseCode)
+            {
+                case 1: throw new NotEnoughResultsException("Number too high.\nTry a smaller number instead.");
+                case 2: throw new InvalidParameterException("Invalid parameter.\nCheck your parameters and try again.");
+                case 3: //Refreshes the token and calls this function again.
+                    await this.SetToken();
+                    return await this.RetrieveQuestions(amount, category, difficulty, questionType);
+                
+                case 4: throw new NoAvailableQuestionsException("No possible questions for the specified query.");
+
+                default: return questions.Questions; //In case of success.
+            }
         }
 
         /// <summary>
@@ -71,7 +79,7 @@ namespace OpenTrivia_Wrapper
         /// If a token is specified, the app won't return the same question twice.
         /// </summary>
         ///
-        public async void UpdateToken()
+        public async Task SetToken()
         {
             string token;
 
@@ -85,6 +93,13 @@ namespace OpenTrivia_Wrapper
                     this.Token = token;
 
                 }
+            }
+        }
+
+        private async Task RefreshToken() { 
+            using (HttpResponseMessage msg = await Client.GetAsync($"https://opentdb.com/api_token.php?command=reset&token={Token}"))
+            {
+
             }
         }
         

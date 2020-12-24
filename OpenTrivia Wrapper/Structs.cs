@@ -1,4 +1,4 @@
-﻿namespace OpenTrivia_Wrapper
+﻿namespace OpenTriviaSharp
 {
     public struct Category
     {

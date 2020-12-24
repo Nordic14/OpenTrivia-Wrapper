@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>OpenTriviaSharp</RootNamespace>
+    <PackageId>OpenTriviaSharp</PackageId>
+    <Authors>Nørdic</Authors>
+    <Company>Nørdic</Company>
+    <Description>A wrapper for the OpenTrivia API.</Description>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageTags>opentrivia library wrapper c# triviasharp</PackageTags>
+    <PackageLicenseFile></PackageLicenseFile>
+    <Copyright>Nørdic© 2020</Copyright>
+    <PackageLicenseExpression></PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/nordic16/OpenTrivia-Wrapper</RepositoryUrl>
+    <AssemblyName>OpenTriviaSharp</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+</Project>

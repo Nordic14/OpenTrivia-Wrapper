@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace OpenTrivia_Wrapper
+namespace OpenTriviaSharp
 {
     public class Question
     {
