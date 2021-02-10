@@ -1,32 +1,32 @@
 ﻿namespace OpenTriviaSharp
 {
-    public struct Category
+    public enum Category
     {
-        public const int ANY = 0;
-        public const int GENERAL_KNOWLEDGE = 9;
-        public const int BOOKS = 10;
-        public const int FILMS = 11;
-        public const int MUSIC = 12;
-        public const int MUSICAL_THEATRES = 13;
-        public const int TV = 14;
-        public const int VIDEOGAMES = 15;
-        public const int BOARD_GAMES = 16;
-        public const int NATURE = 17;
-        public const int COMPUTERS = 18;
-        public const int MATHEMATICS = 19;
-        public const int MYTHOLOGY = 20;
-        public const int SPORTS = 21;
-        public const int GEOGRAPHY = 22;
-        public const int HISTORY = 23;
-        public const int POLITICS = 24;
-        public const int ART = 25;
-        public const int CELEBRITIES = 26;
-        public const int ANIMALS = 27;
-        public const int VEHICLES = 28;
-        public const int ENTERTAINMENT_COMICS = 29;
-        public const int GADGETS = 30;
-        public const int JAPANESE_ANIME_MANGA = 31;
-        public const int CARTOONS = 32;
+        ANY = 0,
+        GENERAL_KNOWLEDGE = 9,
+        BOOKS = 10,
+        FILMS = 11,
+        MUSIC = 12,
+        MUSICAL_THEATRES = 13,
+        TV = 14,
+        VIDEOGAMES = 15,
+        BOARD_GAMES = 16,
+        NATURE = 17,
+        COMPUTERS = 18,
+        MATHEMATICS = 19,
+        MYTHOLOGY = 20,
+        SPORTS = 21,
+        GEOGRAPHY = 22,
+        HISTORY = 23,
+        POLITICS = 24,
+        ART = 25,
+        CELEBRITIES = 26,
+        ANIMALS = 27,
+        VEHICLES = 28,
+        ENTERTAINMENT_COMICS = 29,
+        GADGETS = 30,
+        JAPANESE_ANIME_MANGA = 31,
+        CARTOONS = 32,
     }
 
     public struct QuestionType

@@ -43,16 +43,18 @@ namespace OpenTriviaSharp
         }
         
         /// <summary>
-        /// Retrieves questions based on the settings.
+        /// Retrieves questions based on the arguments.
         /// </summary>
         /// <returns>A list of questions</returns>
-        public async Task<List<Question>> RetrieveQuestions(int amount = 1, int category = Category.ANY, string difficulty = Difficulty.ANY, string questionType = QuestionType.ANY)
+        public async Task<List<Question>> RetrieveQuestions(int amount = 1, Category category = Category.ANY, string difficulty = Difficulty.ANY, string questionType = QuestionType.ANY)
         {
-            string categoryString = category != Category.ANY ? $"&category={category}" : "";
+            string categoryString = category != Category.ANY ? $"&category={(int)category}" : "";
             string difficultyString = difficulty != Difficulty.ANY ? $"&difficulty={difficulty}": "";
             string typeString = questionType != QuestionType.ANY ? $"&type={questionType}" : "";
 
-            string url = $"{BASE_URL}?amount={(amount > 0 ? amount : 1)}{categoryString}{difficultyString}{typeString}{(Token != null ? $"&token={Token}" : "")}";
+            string url = $"{BASE_URL}?amount={(amount > 0 ? amount : 1)}{categoryString}{difficultyString}" +
+                $"{typeString}" +
+                $"{(Token != null ? $"&token={Token}" : "")}";
 
             QuestionResults questions = null;
             using (HttpResponseMessage msg = await Client.GetAsync(url))
@@ -62,23 +64,22 @@ namespace OpenTriviaSharp
 
             switch (questions.ResponseCode)
             {
-                case 1: throw new NotEnoughResultsException("Number too high.\nTry a smaller number instead.");
+                case 1: throw new NotEnoughResultsException("Number too high.\nTry a smaller number of questions" +
+                    " or lowering your difficulty.");
                 case 2: throw new InvalidParameterException("Invalid parameter.\nCheck your parameters and try again.");
-                case 3: //Refreshes the token and calls this function again.
-                    await this.SetToken();
+
+                // Token functionality has been disabled.
+                case 3: 
+                    this.Token = "";
                     return await this.RetrieveQuestions(amount, category, difficulty, questionType);
                 
-                case 4: throw new NoAvailableQuestionsException("No possible questions for the specified query.");
+                case 4: throw new NoAvailableQuestionsException("No available questions for the specified query.");
 
                 default: return questions.Questions; //In case of success.
             }
         }
 
-        /// <summary>
-        /// Call this function to set the client token property.
-        /// If a token is specified, the app won't return the same question twice.
-        /// </summary>
-        ///
+        /*
         public async Task SetToken()
         {
             string token;
@@ -91,17 +92,9 @@ namespace OpenTriviaSharp
                     token = (string)obj["token"];
 
                     this.Token = token;
-
                 }
             }
         }
-
-        private async Task RefreshToken() { 
-            using (HttpResponseMessage msg = await Client.GetAsync($"https://opentdb.com/api_token.php?command=reset&token={Token}"))
-            {
-
-            }
-        }
-        
+        */
     }
 }
